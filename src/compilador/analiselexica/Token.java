@@ -33,7 +33,9 @@ public enum Token
 
 	FECHA_PARENTESES(")"),
 
-	MAIOR(">"), MENOR("<"),
+	MAIOR(">"),
+
+	MENOR("<"),
 
 	DIFERENTE("!="),
 

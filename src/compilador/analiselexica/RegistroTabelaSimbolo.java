@@ -8,6 +8,8 @@ public class RegistroTabelaSimbolo
 
 	private String lexema;
 
+	private RegistroTabelaSimbolo proximo;
+
 	public RegistroTabelaSimbolo(Token p_token, String p_lexama)
 	{
 		setToken(p_token);
@@ -32,6 +34,16 @@ public class RegistroTabelaSimbolo
 	public void setLexema(String lexema)
 	{
 		this.lexema = lexema;
+	}
+
+	public RegistroTabelaSimbolo getProximo()
+	{
+		return this.proximo;
+	}
+
+	public void setProximo(RegistroTabelaSimbolo proximo)
+	{
+		this.proximo = proximo;
 	}
 
 }
