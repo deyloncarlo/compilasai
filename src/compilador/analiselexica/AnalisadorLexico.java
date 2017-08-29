@@ -99,6 +99,17 @@ public class AnalisadorLexico
 			return false;
 		}
 
+		if (p_lexema.equals("/"))
+		{
+			leitor.reset();
+			return false;
+		}
+		else if (p_lexema.length() > 0 && p_char == '/')
+		{
+			leitor.reset();
+			return false;
+		}
+
 		if (p_lexema.equals("-"))
 		{
 			leitor.reset();
