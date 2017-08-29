@@ -9,7 +9,10 @@ public class Main
 		Token[] v_vetorTokens = Token.values();
 		for (int indice = 0; indice < v_vetorTokens.length; indice++)
 		{
-			TabelaSimbolos.insereNovoRegistro(v_vetorTokens[indice], v_vetorTokens[indice].getLexema());
+			if (!v_vetorTokens[indice].getLexema().equals(""))
+			{
+				TabelaSimbolos.insereNovoRegistro(v_vetorTokens[indice], v_vetorTokens[indice].getLexema());
+			}
 		}
 
 		TabelaSimbolos.exibeRegistros();

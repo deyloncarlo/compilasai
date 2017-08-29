@@ -86,11 +86,12 @@ public class TabelaSimbolos
 		else
 		{
 			RegistroTabelaSimbolo aux = raiz.getProximo();
-			System.out.println(raiz.getToken().toString() + raiz.getLexema());
-			System.out.println(aux.getToken().toString() + aux.getLexema());
+			System.out.println(raiz.getToken().toString() + " \"" + raiz.getLexema() + "\"");
+			System.out.println(aux.getToken().toString() + " \"" + aux.getLexema() + " \"");
 			while (aux.getProximo() != null)
 			{
-				System.out.println(aux.getProximo().getToken().toString() + aux.getProximo().getLexema());
+				System.out
+						.println(aux.getProximo().getToken().toString() + " \"" + aux.getProximo().getLexema() + "\"");
 				aux = aux.getProximo();
 			}
 		}

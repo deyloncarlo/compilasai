@@ -51,7 +51,9 @@ public enum Token
 
 	ASTERISCO("*"),
 
-	BARRA("/"),
+	BARRA_DIREITA("/"),
+
+	BARRA_ESQUERDA("\\"),
 
 	PONTO_VIRGULA(";"),
 
