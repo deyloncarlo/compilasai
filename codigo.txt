@@ -1,1 +1,7 @@
-d =6;d / 4!=20
+int teste = 10;
+/*if(teste >=10) {
+    teste = teste+3;
+    teste == coisa;
+}*/
+bom demais = 10;
+oi ()

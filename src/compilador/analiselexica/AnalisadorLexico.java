@@ -34,23 +34,32 @@ public class AnalisadorLexico
 	public static void lerProximoLexema() throws IOException
 	{
 		String v_lexema = ""; // Lexema
-		boolean podeContinuarLendo = true;
+		Boolean podeContinuarLendo = true;
 		char v_char; // Cada caracter lido do arquivo
 		int v_code; // Codigo em ASCII dos caracteres lidos
-
+		int v_codigoEspaco = 32;
+		int v_codigoEnter = 13;
+		int v_codigoLinhaNova = 10;
 		v_code = leitor.read();
 		v_char = (char) v_code;
 
-		while (v_code != 32 && v_code != -1 && podeContinuarLendo)
+		while (v_code != v_codigoEspaco && v_code != v_codigoEnter && v_code != v_codigoLinhaNova && v_code != -1
+				&& podeContinuarLendo != null && podeContinuarLendo)
 		{
 			v_char = (char) v_code;
 			podeContinuarLendo = identificarLexema(v_char, v_lexema);
-			if (podeContinuarLendo)
+			if (podeContinuarLendo != null && podeContinuarLendo)
 			{
 				leitor.mark(0);
 				v_lexema += v_char;
 				v_code = leitor.read();
 			}
+		}
+
+		// Quer dizer que estava lendo um comentário
+		if (podeContinuarLendo == null)
+		{
+			v_lexema = "";
 		}
 
 		if (v_code == -1)
@@ -64,91 +73,27 @@ public class AnalisadorLexico
 		}
 	}
 
-	public static boolean identificarLexema(char p_char, String p_lexema) throws IOException
+	public static Boolean identificarLexema(char p_char, String p_lexema) throws IOException
 	{
-		if (p_lexema.equals(";"))
+		if (p_lexema.equals("/") && p_char == '*')
 		{
-			leitor.reset();
-			return false;
-		}
-		else if (p_lexema.length() > 0 && p_char == ';')
-		{
-			leitor.reset();
-			return false;
+			return lerConteudoComentario();
 		}
 
-		if (p_lexema.equals("+"))
+		if (p_lexema.length() == 1 && p_lexema.matches(";|[(]|[)]|[+]|[*]|/|-|[{]|[}]"))
 		{
 			leitor.reset();
 			return false;
 		}
-		else if (p_lexema.length() > 0 && p_char == '+')
+		else if (p_lexema.length() > 0 && (p_char == ';' || p_char == '(' || p_char == ')' || p_char == '+'
+				|| p_char == '*' || p_char == '/' || p_char == '-' || p_char == '{' || p_char == '}' || p_char == '>'
+				|| p_char == '<' || p_char == '!'))
 		{
 			leitor.reset();
 			return false;
 		}
-
-		if (p_lexema.equals("*"))
-		{
-			leitor.reset();
-			return false;
-		}
-		else if (p_lexema.length() > 0 && p_char == '*')
-		{
-			leitor.reset();
-			return false;
-		}
-
-		if (p_lexema.equals("/"))
-		{
-			leitor.reset();
-			return false;
-		}
-		else if (p_lexema.length() > 0 && p_char == '/')
-		{
-			leitor.reset();
-			return false;
-		}
-
-		if (p_lexema.equals("-"))
-		{
-			leitor.reset();
-			return false;
-		}
-		else if (p_lexema.length() > 0 && p_char == '-')
-		{
-			leitor.reset();
-			return false;
-		}
-
-		if (p_lexema.length() > 0 && p_char == '>')
-		{
-			leitor.reset();
-			return false;
-		}
-		else if (p_lexema.equals(">") && p_char != '=')
-		{
-			leitor.reset();
-			return false;
-		}
-
-		if (p_lexema.length() > 0 && p_char == '<')
-		{
-			leitor.reset();
-			return false;
-		}
-		else if (p_lexema.equals("<") && p_char != '=')
-		{
-			leitor.reset();
-			return false;
-		}
-
-		if (p_lexema.length() > 0 && p_char == '!')
-		{
-			leitor.reset();
-			return false;
-		}
-		else if (p_lexema.equals("!") && p_char != '=')
+		else if ((p_lexema.equals(">") || p_lexema.equals("<") || p_lexema.equals("!") || p_lexema.equals("="))
+				&& p_char != '=')
 		{
 			leitor.reset();
 			return false;
@@ -163,18 +108,35 @@ public class AnalisadorLexico
 			}
 		}
 
-		if (p_lexema.equals("=") && p_char != '=')
-		{
-			leitor.reset();
-			return false;
-		}
-
 		if (p_lexema.length() > 1 && contemAlgumOperador(p_lexema))
 		{
 			leitor.reset();
 			return false;
 		}
+
 		return true;
+	}
+
+	/**
+	 * Método que lê todo o conteúdo dentro de um comentário
+	 */
+	private static Boolean lerConteudoComentario() throws IOException
+	{
+		String v_fimComentario = "";
+		boolean v_continuar = true;
+		int v_code = leitor.read();
+		v_fimComentario += (char) v_code;
+
+		while (v_continuar && v_code != -1)
+		{
+			v_code = leitor.read();
+			v_fimComentario += (char) v_code;
+			if (v_fimComentario.length() > 1 && v_fimComentario.substring(v_fimComentario.length() - 2).equals("*/"))
+			{
+				v_continuar = false;
+			}
+		}
+		return null;
 	}
 
 	public static boolean contemAlgumOperador(String p_lexema)
