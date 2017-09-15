@@ -1,7 +1,1 @@
-int teste = 10;
-/*if(teste >=10) {
-    teste = teste+3;
-    teste == coisa;
-}*/
-bom demais = 10;
-oi ()
+02

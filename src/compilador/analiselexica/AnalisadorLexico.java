@@ -20,6 +20,12 @@ public class AnalisadorLexico
 
 	private static final String operadoresOuComparadores = "=!()<>+-*/;";
 
+	private static final String padraoFormacaoString = "[\"][\\w]*[\"]";
+
+	private static final String padraoFormacaoInt = "[0]|[1-9][0-9]*";
+
+	private static final String padraoFormacaoByte = "([0]|[1-9][0-9]{0,2})|0x([1-9A-F][0-9A-F]{0,1}|[0])";
+
 	public void getProximoToken()
 	{
 
@@ -70,6 +76,19 @@ public class AnalisadorLexico
 		if (!v_lexema.isEmpty())
 		{
 			System.out.println(v_lexema);
+		}
+
+		if (v_lexema.matches(padraoFormacaoString))
+		{
+			System.out.println("é uma string");
+		}
+		if (v_lexema.matches(padraoFormacaoInt))
+		{
+			System.out.println("é um int");
+		}
+		if (v_lexema.matches(padraoFormacaoByte))
+		{
+			System.out.println("é um byte");
 		}
 	}
 
