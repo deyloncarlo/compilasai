@@ -67,7 +67,9 @@ public enum Token
 
 	FALSE("false"),
 
-	IDENTIFICADOR("");
+	IDENTIFICADOR(""),
+
+	CONSTANTE("");
 
 	private String lexema;
 

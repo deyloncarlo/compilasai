@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class AnalisadorLexico
 {
-	private static RegistroLexico registroLexico;
+	private static RegistroLexico registroLexico = new RegistroLexico();
 
 	/** caminho do arquivo de código fonte */
 	private static String nomeArquivo = "codigo.txt";
@@ -18,6 +18,8 @@ public class AnalisadorLexico
 	/** Boolean que indica se já é fim de arquivo */
 	private static boolean fimArquivo;
 
+	private static Integer numeroLinhaArquivo = 0;
+
 	private static final String operadoresOuComparadores = "=!()<>+-*/;";
 
 	private static final String padraoFormacaoString = "[\"][\\w]*[\"]";
@@ -25,6 +27,8 @@ public class AnalisadorLexico
 	private static final String padraoFormacaoInt = "[0]|[1-9][0-9]*";
 
 	private static final String padraoFormacaoByte = "([0]|[1-9][0-9]{0,2})|0x([1-9A-F][0-9A-F]{0,1}|[0])";
+
+	private static final String padraoFormacaoIdentificador = "[_|a-zA-Z][_|0-9a-zA-Z]*";
 
 	public void getProximoToken()
 	{
@@ -62,6 +66,11 @@ public class AnalisadorLexico
 			}
 		}
 
+		if (v_code == v_codigoLinhaNova)
+		{
+			numeroLinhaArquivo++;
+		}
+
 		// Quer dizer que estava lendo um comentário
 		if (podeContinuarLendo == null)
 		{
@@ -78,17 +87,44 @@ public class AnalisadorLexico
 			System.out.println(v_lexema);
 		}
 
+		identificarLexema(v_lexema);
+	}
+
+	/**
+	 * Método que identifica qual o lexema preenche o registro léximo
+	 * 
+	 * @param v_lexema
+	 */
+	private static void identificarLexema(String v_lexema)
+	{
 		if (v_lexema.matches(padraoFormacaoString))
 		{
-			System.out.println("é uma string");
+			preencherRegistroLeximo(v_lexema, Tipo.STRING, Token.CONSTANTE, null);
 		}
-		if (v_lexema.matches(padraoFormacaoInt))
+		else if (v_lexema.matches(padraoFormacaoInt))
 		{
-			System.out.println("é um int");
+			preencherRegistroLeximo(v_lexema, Tipo.INT, Token.CONSTANTE, null);
 		}
-		if (v_lexema.matches(padraoFormacaoByte))
+		else if (v_lexema.matches(padraoFormacaoByte))
 		{
-			System.out.println("é um byte");
+			preencherRegistroLeximo(v_lexema, Tipo.BYTE, Token.CONSTANTE, null);
+		}
+		else
+		{
+			RegistroTabelaSimbolo v_resitroTabelaSimbolo = TabelaSimbolos.pesquisarRegistro(v_lexema);
+			if ((v_resitroTabelaSimbolo == null && v_lexema.matches(padraoFormacaoIdentificador))
+					|| v_resitroTabelaSimbolo != null)
+			{
+				if (v_resitroTabelaSimbolo == null)
+				{
+					v_resitroTabelaSimbolo = TabelaSimbolos.insereNovoRegistro(Token.IDENTIFICADOR, v_lexema);
+				}
+				preencherRegistroLeximo(v_lexema, null, v_resitroTabelaSimbolo.getToken(), v_resitroTabelaSimbolo);
+			}
+			else
+			{
+				throw new ErroLexico(v_lexema, numeroLinhaArquivo);
+			}
 		}
 	}
 
@@ -158,6 +194,26 @@ public class AnalisadorLexico
 		return null;
 	}
 
+	/**
+	 * Método que preenche o registro léxicom de acordo com o lexema lido
+	 * 
+	 * @param p_lexema
+	 * @param p_tipo
+	 * @param p_token
+	 * @param p_registroTabelaSimbolo
+	 */
+	public static void preencherRegistroLeximo(String p_lexema, Tipo p_tipo, Token p_token,
+			RegistroTabelaSimbolo p_registroTabelaSimbolo)
+	{
+		getRegistroLexico().setLexema(p_lexema);
+		getRegistroLexico().setTipo(p_tipo);
+		getRegistroLexico().setToken(Token.CONSTANTE);
+		if (p_registroTabelaSimbolo != null)
+		{
+			getRegistroLexico().setRegistroTabelaSimbolo(p_registroTabelaSimbolo);
+		}
+	}
+
 	public static boolean contemAlgumOperador(String p_lexema)
 	{
 		String v_stringChar;
@@ -173,11 +229,11 @@ public class AnalisadorLexico
 			}
 		}
 		return false;
-
 	}
 
 	public static void lerArquivo() throws IOException
 	{
+		registroLexico = new RegistroLexico();
 		while (!isFimArquivo())
 		{
 			lerProximoLexema();
@@ -236,55 +292,4 @@ public class AnalisadorLexico
 		AnalisadorLexico.fimArquivo = fimArquivo;
 	}
 
-	/**
-	 * Representa um registro lido no código-fonte
-	 * 
-	 * @author Deylon
-	 *
-	 */
-	private class RegistroLexico
-	{
-		private Token token;
-		private String lexema;
-		private RegistroTabelaSimbolo registroTabelaSimbolo;
-
-		public RegistroLexico(Token token, String lexema, RegistroTabelaSimbolo registroTabelaSimbolo)
-		{
-			super();
-			this.token = token;
-			this.lexema = lexema;
-			this.registroTabelaSimbolo = registroTabelaSimbolo;
-		}
-
-		public Token getToken()
-		{
-			return this.token;
-		}
-
-		public void setToken(Token token)
-		{
-			this.token = token;
-		}
-
-		public String getLexema()
-		{
-			return this.lexema;
-		}
-
-		public void setLexema(String lexema)
-		{
-			this.lexema = lexema;
-		}
-
-		public RegistroTabelaSimbolo getRegistroTabelaSimbolo()
-		{
-			return this.registroTabelaSimbolo;
-		}
-
-		public void setRegistroTabelaSimbolo(RegistroTabelaSimbolo registroTabelaSimbolo)
-		{
-			this.registroTabelaSimbolo = registroTabelaSimbolo;
-		}
-
-	}
 }

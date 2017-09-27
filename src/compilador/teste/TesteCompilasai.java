@@ -40,6 +40,7 @@ public class TesteCompilasai
 
 	public static void lendoArquivoCodigoFonte() throws IOException
 	{
+		insercaoPalavrasReservadas();
 		AnalisadorLexico.abrirArquivo();
 		AnalisadorLexico.lerArquivo();
 	}

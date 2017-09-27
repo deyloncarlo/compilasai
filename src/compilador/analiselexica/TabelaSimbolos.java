@@ -42,23 +42,23 @@ public class TabelaSimbolos
 		return raiz;
 	}
 
-	public RegistroTabelaSimbolo pesquisarRegistro(String p_lexema)
+	public static RegistroTabelaSimbolo pesquisarRegistro(String p_lexema)
 	{
-		boolean v_encontrou = false;
+		Boolean v_encontrou = false;
 		if (raiz != null)
 		{
-			if (!verificaSeRegistoPossuiLexema(p_lexema, raiz))
+			if (verificaSeRegistoPossuiLexema(p_lexema, raiz) != null && !verificaSeRegistoPossuiLexema(p_lexema, raiz))
 			{
 				RegistroTabelaSimbolo v_proximoRegistro = raiz.getProximo();
 				v_encontrou = verificaSeRegistoPossuiLexema(p_lexema, v_proximoRegistro);
 
-				while (!v_encontrou)
+				while (v_encontrou != null && !v_encontrou)
 				{
 					v_proximoRegistro = v_proximoRegistro.getProximo();
 					v_encontrou = verificaSeRegistoPossuiLexema(p_lexema, v_proximoRegistro);
 				}
 
-				if (v_encontrou)
+				if (v_encontrou != null && v_encontrou)
 				{
 					return v_proximoRegistro;
 				}
@@ -69,7 +69,7 @@ public class TabelaSimbolos
 			}
 			else
 			{
-				return this.raiz;
+				return raiz;
 			}
 
 		}
@@ -98,8 +98,12 @@ public class TabelaSimbolos
 
 	}
 
-	public boolean verificaSeRegistoPossuiLexema(String p_lexema, RegistroTabelaSimbolo p_registro)
+	public static Boolean verificaSeRegistoPossuiLexema(String p_lexema, RegistroTabelaSimbolo p_registro)
 	{
+		if (p_registro == null)
+		{
+			return null;
+		}
 		return p_registro.getLexema().equals(p_lexema);
 	}
 
