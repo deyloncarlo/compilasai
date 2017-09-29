@@ -69,7 +69,11 @@ public enum Token
 
 	IDENTIFICADOR(""),
 
-	CONSTANTE("");
+	CONSTANTE(""),
+
+	ABRE_CHAVES("{"),
+
+	FECHA_CHAVES("}");
 
 	private String lexema;
 

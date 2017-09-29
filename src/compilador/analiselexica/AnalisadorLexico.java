@@ -10,7 +10,7 @@ public class AnalisadorLexico
 	private static RegistroLexico registroLexico = new RegistroLexico();
 
 	/** caminho do arquivo de código fonte */
-	private static String nomeArquivo = "codigo.txt";
+	private static String nomeArquivo = "exemplo10.L";
 
 	/** Leitor responsável por ler o arquivo fonte */
 	private static BufferedReader leitor;
@@ -18,7 +18,7 @@ public class AnalisadorLexico
 	/** Boolean que indica se já é fim de arquivo */
 	private static boolean fimArquivo;
 
-	private static Integer numeroLinhaArquivo = 0;
+	private static Integer numeroLinhaArquivo = 1;
 
 	private static final String operadoresOuComparadores = "=!()<>+-*/;";
 
@@ -50,11 +50,12 @@ public class AnalisadorLexico
 		int v_codigoEspaco = 32;
 		int v_codigoEnter = 13;
 		int v_codigoLinhaNova = 10;
+		int v_codigoTab = 9;
 		v_code = leitor.read();
 		v_char = (char) v_code;
 
-		while (v_code != v_codigoEspaco && v_code != v_codigoEnter && v_code != v_codigoLinhaNova && v_code != -1
-				&& podeContinuarLendo != null && podeContinuarLendo)
+		while (v_code != v_codigoEspaco && v_code != v_codigoTab && v_code != v_codigoEnter
+				&& v_code != v_codigoLinhaNova && v_code != -1 && podeContinuarLendo != null && podeContinuarLendo)
 		{
 			v_char = (char) v_code;
 			podeContinuarLendo = identificarLexema(v_char, v_lexema);
@@ -85,9 +86,8 @@ public class AnalisadorLexico
 		if (!v_lexema.isEmpty())
 		{
 			System.out.println(v_lexema);
+			identificarLexema(v_lexema);
 		}
-
-		identificarLexema(v_lexema);
 	}
 
 	/**
@@ -135,14 +135,14 @@ public class AnalisadorLexico
 			return lerConteudoComentario();
 		}
 
-		if (p_lexema.length() == 1 && p_lexema.matches(";|[(]|[)]|[+]|[*]|/|-|[{]|[}]"))
+		if (p_lexema.length() == 1 && p_lexema.matches(";|,|[(]|[)]|[+]|[*]|/|-|[{]|[}]"))
 		{
 			leitor.reset();
 			return false;
 		}
-		else if (p_lexema.length() > 0 && (p_char == ';' || p_char == '(' || p_char == ')' || p_char == '+'
-				|| p_char == '*' || p_char == '/' || p_char == '-' || p_char == '{' || p_char == '}' || p_char == '>'
-				|| p_char == '<' || p_char == '!'))
+		else if (p_lexema.length() > 0 && (p_char == ';' || p_char == ',' || p_char == '(' || p_char == ')'
+				|| p_char == '+' || p_char == '*' || p_char == '/' || p_char == '-' || p_char == '{' || p_char == '}'
+				|| p_char == '>' || p_char == '<' || p_char == '!'))
 		{
 			leitor.reset();
 			return false;
