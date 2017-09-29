@@ -10,7 +10,7 @@ public class AnalisadorLexico
 	private static RegistroLexico registroLexico = new RegistroLexico();
 
 	/** caminho do arquivo de código fonte */
-	private static String nomeArquivo = "exemplo10.L";
+	private static String nomeArquivo = "exemplo5.L";
 
 	/** Leitor responsável por ler o arquivo fonte */
 	private static BufferedReader leitor;
@@ -123,7 +123,7 @@ public class AnalisadorLexico
 			}
 			else
 			{
-				throw new ErroLexico(v_lexema, numeroLinhaArquivo);
+				throw new ErroLexico(Mensagem.lexemaNaoIdentificado(numeroLinhaArquivo, v_lexema));
 			}
 		}
 	}

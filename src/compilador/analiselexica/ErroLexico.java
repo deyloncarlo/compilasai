@@ -6,9 +6,9 @@ public class ErroLexico extends RuntimeException
 
 	private String mensagemErro;
 
-	public ErroLexico(String p_lexema, int p_numeroLinha)
+	public ErroLexico(String p_mensagem)
 	{
-		this.mensagemErro = p_numeroLinha + ": " + p_lexema;
+		this.mensagemErro = p_mensagem;
 	}
 
 	@Override
