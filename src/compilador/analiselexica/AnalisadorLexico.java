@@ -10,7 +10,7 @@ public class AnalisadorLexico
 	private static RegistroLexico registroLexico = new RegistroLexico();
 
 	/** caminho do arquivo de código fonte */
-	private static String nomeArquivo = "exemplo5.L";
+	private static String nomeArquivo = "codigo.txt";
 
 	/** Leitor responsável por ler o arquivo fonte */
 	private static BufferedReader leitor;
@@ -29,6 +29,8 @@ public class AnalisadorLexico
 	private static final String padraoFormacaoByte = "([0]|[1-9][0-9]{0,2})|0x([1-9A-F][0-9A-F]{0,1}|[0])";
 
 	private static final String padraoFormacaoIdentificador = "[_|a-zA-Z][_|0-9a-zA-Z]*";
+
+	private static final String caracteresInvalidos = "$";
 
 	public void getProximoToken()
 	{
@@ -58,6 +60,12 @@ public class AnalisadorLexico
 				&& v_code != v_codigoLinhaNova && v_code != -1 && podeContinuarLendo != null && podeContinuarLendo)
 		{
 			v_char = (char) v_code;
+
+			if (caracteresInvalidos.indexOf(v_char) != -1)
+			{
+				throw new ErroLexico(Mensagem.caracterInvalido(numeroLinhaArquivo));
+			}
+
 			podeContinuarLendo = identificarLexema(v_char, v_lexema);
 			if (podeContinuarLendo != null && podeContinuarLendo)
 			{
