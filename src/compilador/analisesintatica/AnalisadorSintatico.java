@@ -29,4 +29,16 @@ public class AnalisadorSintatico
 			AnalisadorLexico.lerProximoLexema();
 		}
 	}
+
+	/**
+	 * Método que chama a execução da gramática
+	 * 
+	 * @throws IOException
+	 */
+	public static void executarGramatica() throws IOException
+	{
+		Gramatica v_gramatica = new Gramatica();
+		v_gramatica.executarGramatica();
+	}
+
 }

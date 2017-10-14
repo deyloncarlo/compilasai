@@ -10,7 +10,7 @@ public class AnalisadorLexico
 	private static RegistroLexico registroLexico = new RegistroLexico();
 
 	/** caminho do arquivo de código fonte */
-	private static String nomeArquivo = "codigo.txt";
+	private static String nomeArquivo = "exemplo1.L";
 
 	/** Leitor responsável por ler o arquivo fonte */
 	private static BufferedReader leitor;
@@ -22,7 +22,7 @@ public class AnalisadorLexico
 
 	private static final String operadoresOuComparadores = "=!()<>+-*/;";
 
-	private static final String padraoFormacaoString = "[\"][\\w]*[\"]";
+	private static final String padraoFormacaoString = "\"[a-zA-Z0-9_çÇ]*\"";
 
 	private static final String padraoFormacaoInt = "[0]|[1-9][0-9]*";
 
@@ -45,6 +45,7 @@ public class AnalisadorLexico
 	 */
 	public static void lerProximoLexema() throws IOException
 	{
+
 		String v_lexema = ""; // Lexema
 		Boolean podeContinuarLendo = true;
 		char v_char; // Cada caracter lido do arquivo
@@ -96,6 +97,11 @@ public class AnalisadorLexico
 			System.out.println(v_lexema);
 			identificarLexema(v_lexema);
 		}
+		else
+		{
+			// será necessário ler outra vez
+			lerProximoLexema();
+		}
 	}
 
 	/**
@@ -107,15 +113,15 @@ public class AnalisadorLexico
 	{
 		if (v_lexema.matches(padraoFormacaoString))
 		{
-			preencherRegistroLeximo(v_lexema, Tipo.STRING, Token.CONSTANTE, null);
+			preencherRegistroLexico(v_lexema, Tipo.STRING, Token.CONSTANTE, null);
 		}
 		else if (v_lexema.matches(padraoFormacaoInt))
 		{
-			preencherRegistroLeximo(v_lexema, Tipo.INT, Token.CONSTANTE, null);
+			preencherRegistroLexico(v_lexema, Tipo.INT, Token.CONSTANTE, null);
 		}
 		else if (v_lexema.matches(padraoFormacaoByte))
 		{
-			preencherRegistroLeximo(v_lexema, Tipo.BYTE, Token.CONSTANTE, null);
+			preencherRegistroLexico(v_lexema, Tipo.BYTE, Token.CONSTANTE, null);
 		}
 		else
 		{
@@ -127,7 +133,7 @@ public class AnalisadorLexico
 				{
 					v_resitroTabelaSimbolo = TabelaSimbolos.insereNovoRegistro(Token.IDENTIFICADOR, v_lexema);
 				}
-				preencherRegistroLeximo(v_lexema, null, v_resitroTabelaSimbolo.getToken(), v_resitroTabelaSimbolo);
+				preencherRegistroLexico(v_lexema, null, v_resitroTabelaSimbolo.getToken(), v_resitroTabelaSimbolo);
 			}
 			else
 			{
@@ -210,12 +216,12 @@ public class AnalisadorLexico
 	 * @param p_token
 	 * @param p_registroTabelaSimbolo
 	 */
-	public static void preencherRegistroLeximo(String p_lexema, Tipo p_tipo, Token p_token,
+	public static void preencherRegistroLexico(String p_lexema, Tipo p_tipo, Token p_token,
 			RegistroTabelaSimbolo p_registroTabelaSimbolo)
 	{
 		getRegistroLexico().setLexema(p_lexema);
 		getRegistroLexico().setTipo(p_tipo);
-		getRegistroLexico().setToken(Token.CONSTANTE);
+		getRegistroLexico().setToken(p_token);
 		if (p_registroTabelaSimbolo != null)
 		{
 			getRegistroLexico().setRegistroTabelaSimbolo(p_registroTabelaSimbolo);
@@ -246,6 +252,14 @@ public class AnalisadorLexico
 		{
 			lerProximoLexema();
 		}
+	}
+
+	/**
+	 * Método que inicializa o Registro Léxico
+	 */
+	public static void iniciarRegistroLexico()
+	{
+		registroLexico = new RegistroLexico();
 	}
 
 	public static void abrirArquivo()

@@ -5,6 +5,7 @@ import java.io.IOException;
 import compilador.analiselexica.AnalisadorLexico;
 import compilador.analiselexica.TabelaSimbolos;
 import compilador.analiselexica.Token;
+import compilador.analisesintatica.AnalisadorSintatico;
 
 public class TesteCompilasai
 {
@@ -13,7 +14,7 @@ public class TesteCompilasai
 	{
 		try
 		{
-			lendoArquivoCodigoFonte();
+			startCompilaSai();
 		}
 		catch (IOException e)
 		{
@@ -43,5 +44,14 @@ public class TesteCompilasai
 		insercaoPalavrasReservadas();
 		AnalisadorLexico.abrirArquivo();
 		AnalisadorLexico.lerArquivo();
+	}
+
+	public static void startCompilaSai() throws IOException
+	{
+		insercaoPalavrasReservadas();
+		AnalisadorLexico.abrirArquivo();
+		AnalisadorLexico.iniciarRegistroLexico();
+		AnalisadorLexico.lerProximoLexema();
+		AnalisadorSintatico.executarGramatica();
 	}
 }

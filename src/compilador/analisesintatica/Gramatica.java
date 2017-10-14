@@ -19,6 +19,36 @@ public class Gramatica
 		AnalisadorSintatico.casaToken(p_token);
 	}
 
+	public void executarGramatica() throws IOException
+	{
+		DeclaracaoVariaveis v_declaraVariveis = new DeclaracaoVariaveis();
+		DeclaracaoBlocos v_declaracaoBlocos = new DeclaracaoBlocos();
+		while (!AnalisadorLexico.isFimArquivo()
+				&& !AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ABRE_CHAVES))
+		{
+			v_declaraVariveis.PARTE_DECLARACAO_VARIAVEIS();
+		}
+		if (!AnalisadorLexico.isFimArquivo())
+		{
+			v_declaracaoBlocos.PARTE_DECLARACAO_BLOCO();
+		}
+
+	}
+
+	/**
+	 * Classe responsável por gerenciar a parte de declaração de blocos
+	 * 
+	 * @author Deylon
+	 *
+	 */
+	private class DeclaracaoBlocos
+	{
+		public void PARTE_DECLARACAO_BLOCO() throws IOException
+		{
+			casaToken(Token.ABRE_CHAVES);
+		}
+	}
+
 	/**
 	 * Classe responsável por gerenciar parte de declaração de variáveis
 	 * 
@@ -62,6 +92,7 @@ public class Gramatica
 				casaToken(Token.SUBTRACAO);
 			}
 			casaToken(Token.CONSTANTE);
+			casaToken(Token.PONTO_VIRGULA);
 		}
 
 		/**
@@ -88,8 +119,9 @@ public class Gramatica
 			{
 				LISTA_ID_DECLARACAO();
 			}
-			else
+			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.IGUAL))
 			{
+				casaToken(Token.IGUAL);
 				if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ADICAO))
 				{
 					casaToken(Token.ADICAO);
