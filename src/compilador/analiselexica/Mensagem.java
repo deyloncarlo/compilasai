@@ -16,4 +16,9 @@ public class Mensagem
 	{
 		return p_nuemroLinha + ": " + "fim arquivo não esperado";
 	}
+
+	public static String tokenNaoEsperado(String p_lexema, Integer p_numeroLinhaArquivo)
+	{
+		return p_numeroLinhaArquivo + ": " + "token não esperado [" + p_lexema + "]";
+	}
 }

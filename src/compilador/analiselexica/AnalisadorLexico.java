@@ -300,4 +300,9 @@ public class AnalisadorLexico
 		AnalisadorLexico.fimArquivo = fimArquivo;
 	}
 
+	public static Integer getNumeroLinhaArquivo()
+	{
+		return numeroLinhaArquivo;
+	}
+
 }
