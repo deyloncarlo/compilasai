@@ -10,7 +10,7 @@ public class AnalisadorLexico
 	private static RegistroLexico registroLexico = new RegistroLexico();
 
 	/** caminho do arquivo de código fonte */
-	private static String nomeArquivo = "exemplo1.L";
+	private static String nomeArquivo = "codigo.txt";
 
 	/** Leitor responsável por ler o arquivo fonte */
 	private static BufferedReader leitor;
@@ -26,9 +26,11 @@ public class AnalisadorLexico
 
 	private static final String padraoFormacaoInt = "[0]|[1-9][0-9]*";
 
-	private static final String padraoFormacaoByte = "([0]|[1-9][0-9]{0,2})|0x([1-9A-F][0-9A-F]{0,1}|[0])";
+	private static final String padraoFormacaoByte = "([0]|[1-9][0-9]{0,2})|0x([0-9A-F]{1,2}|[0])";
 
 	private static final String padraoFormacaoIdentificador = "[_|a-zA-Z][_|0-9a-zA-Z]*";
+
+	private static final String padraoFormacaoBoolean = "TRUE|FALSE";
 
 	private static final String caracteresInvalidos = "$";
 
@@ -100,7 +102,10 @@ public class AnalisadorLexico
 		else
 		{
 			// será necessário ler outra vez
-			lerProximoLexema();
+			if (!isFimArquivo())
+			{
+				lerProximoLexema();
+			}
 		}
 	}
 
@@ -122,6 +127,10 @@ public class AnalisadorLexico
 		else if (v_lexema.matches(padraoFormacaoByte))
 		{
 			preencherRegistroLexico(v_lexema, Tipo.BYTE, Token.CONSTANTE, null);
+		}
+		else if (v_lexema.matches(padraoFormacaoBoolean))
+		{
+			preencherRegistroLexico(v_lexema, Tipo.BOOLEAN, Token.CONSTANTE, null);
 		}
 		else
 		{

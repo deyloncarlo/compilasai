@@ -1,1 +1,4 @@
-int aasd__ = "asçdlkfjasd__";
+boolean j=FALSE;byte t=0x3F;
+string teste, oila,
+cabelo,
+ok;
