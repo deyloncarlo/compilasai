@@ -57,7 +57,66 @@ public class Gramatica
 
 		public void DECLARA_COMANDOS() throws IOException
 		{
-			COMANDO_ATRIBUICAO();
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.IDENTIFICADOR))
+			{
+				COMANDO_ATRIBUICAO();
+			}
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.WHILE))
+			{
+				COMANDO_REPETICAO();
+			}
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.IF))
+			{
+				COMANDO_TESTE();
+			}
+		}
+
+		private void COMANDO_TESTE() throws IOException
+		{
+			casaToken(Token.IF);
+			casaToken(Token.ABRE_PARENTESES);
+			EXPRESSAO();
+			casaToken(Token.FECHA_PARENTESES);
+			CORPO_TESTE();
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ELSE))
+			{
+				casaToken(Token.ELSE);
+				COMANDO_TESTE();
+			}
+
+		}
+
+		private void CORPO_TESTE() throws IOException
+		{
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ABRE_CHAVES))
+			{
+				PARTE_DECLARACAO_BLOCO();
+			}
+			DECLARA_COMANDOS();
+		}
+
+		/**
+		 * Identifica o código de um while
+		 * 
+		 * @throws IOException
+		 */
+		private void COMANDO_REPETICAO() throws IOException
+		{
+			casaToken(Token.WHILE);
+			casaToken(Token.ABRE_PARENTESES);
+			EXPRESSAO();
+			casaToken(Token.FECHA_PARENTESES);
+			COMANDO_REPETICAO_CORPO();
+
+		}
+
+		private void COMANDO_REPETICAO_CORPO() throws IOException
+		{
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ABRE_CHAVES))
+			{
+				PARTE_DECLARACAO_BLOCO();
+			}
+			DECLARA_COMANDOS();
 		}
 
 		/**

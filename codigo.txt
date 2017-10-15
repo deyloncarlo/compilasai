@@ -1,4 +1,4 @@
-byte variavel_1 = 0x05;
 {
-variavel_1 = 2!=3;
+	if(2)
+	jar = 8;
 }

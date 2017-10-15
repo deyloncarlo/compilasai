@@ -19,7 +19,11 @@ public class AnalisadorSintatico
 	 */
 	public static void casaToken(Token p_token) throws IOException
 	{
-		if (!p_token.equals(AnalisadorLexico.getRegistroLexico().getToken()))
+		if (AnalisadorLexico.isFimArquivo())
+		{
+			throw new ErroLexico(Mensagem.fimArquivoNaoEsperado(AnalisadorLexico.getNumeroLinhaArquivo()));
+		}
+		else if (!p_token.equals(AnalisadorLexico.getRegistroLexico().getToken()))
 		{
 			throw new ErroLexico(Mensagem.tokenNaoEsperado(AnalisadorLexico.getRegistroLexico().getLexema(),
 					AnalisadorLexico.getNumeroLinhaArquivo()));

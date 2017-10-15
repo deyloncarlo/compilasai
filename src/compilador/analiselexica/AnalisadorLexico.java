@@ -89,7 +89,7 @@ public class AnalisadorLexico
 			v_lexema = "";
 		}
 
-		if (v_code == -1)
+		if (v_code == -1 && v_lexema.isEmpty())
 		{
 			setFimArquivo(true);
 		}
