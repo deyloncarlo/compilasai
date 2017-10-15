@@ -10,6 +10,10 @@ import compilador.analisesintatica.AnalisadorSintatico;
 public class TesteCompilasai
 {
 
+	/**
+	 * Deylon Carlo Fidelis Couto, Laura Ester
+	 * 
+	 */
 	public static void main(String[] args)
 	{
 		try
