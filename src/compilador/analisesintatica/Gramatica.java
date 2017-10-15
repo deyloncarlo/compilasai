@@ -43,10 +43,119 @@ public class Gramatica
 	 */
 	private class DeclaracaoBlocos
 	{
+		/**
+		 * Parte responsável por identificar todo o escopo de blocos do código
+		 * 
+		 * @throws IOException
+		 */
 		public void PARTE_DECLARACAO_BLOCO() throws IOException
 		{
 			casaToken(Token.ABRE_CHAVES);
+			DECLARA_COMANDOS();
+			casaToken(Token.FECHA_CHAVES);
 		}
+
+		public void DECLARA_COMANDOS() throws IOException
+		{
+			COMANDO_ATRIBUICAO();
+		}
+
+		public void COMANDO_ATRIBUICAO() throws IOException
+		{
+			casaToken(Token.IDENTIFICADOR);
+			casaToken(Token.IGUAL);
+
+		}
+
+		public void EXPRESSAO() throws IOException
+		{
+			EXPRESSAO_SIMPLES();
+		}
+
+		public void EXPRESSAO_SIMPLES() throws IOException
+		{
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ADICAO))
+			{
+				casaToken(Token.ADICAO);
+			}
+			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.SUBTRACAO))
+			{
+				casaToken(Token.SUBTRACAO);
+			}
+
+			T();
+
+			while (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ADICAO)
+					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.SUBTRACAO)
+					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.AND))
+			{
+				if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ASTERISCO))
+				{
+					casaToken(Token.ASTERISCO);
+				}
+				else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.BARRA_DIREITA))
+				{
+					casaToken(Token.BARRA_DIREITA);
+				}
+				else
+				{
+					casaToken(Token.AND);
+				}
+				F();
+			}
+
+		}
+
+		public void T() throws IOException
+		{
+			F();
+			while (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ASTERISCO)
+					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.BARRA_DIREITA)
+					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.AND))
+			{
+				if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ASTERISCO))
+				{
+					casaToken(Token.ASTERISCO);
+				}
+				else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.BARRA_DIREITA))
+				{
+					casaToken(Token.BARRA_DIREITA);
+				}
+				else
+				{
+					casaToken(Token.AND);
+				}
+				F();
+			}
+		}
+
+		public void F() throws IOException
+		{
+			switch (AnalisadorLexico.getRegistroLexico().getToken())
+			{
+				case CONSTANTE:
+					casaToken(Token.CONSTANTE);
+					break;
+
+				case IDENTIFICADOR:
+					casaToken(Token.IDENTIFICADOR);
+					break;
+
+				case NOT:
+					casaToken(Token.NOT);
+					F();
+					break;
+
+				case ABRE_PARENTESES:
+					casaToken(Token.ABRE_PARENTESES);
+					EXPRESSAO();
+					casaToken(Token.FECHA_PARENTESES);
+					break;
+				default:
+					break;
+			}
+		}
+
 	}
 
 	/**
