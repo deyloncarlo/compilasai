@@ -152,7 +152,7 @@ public class Gramatica
 			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ELSE))
 			{
 				casaToken(Token.ELSE);
-				COMANDO_TESTE();
+				CORPO_TESTE();
 			}
 
 		}

@@ -21,4 +21,9 @@ public class Mensagem
 	{
 		return p_numeroLinhaArquivo + ": " + "token não esperado [" + p_lexema + "]";
 	}
+
+	public static String quebraDeLinhaDentroDeString(Integer p_numeroLinhaArquivo)
+	{
+		return p_numeroLinhaArquivo + ": " + "quebra de linha dentro de string";
+	}
 }

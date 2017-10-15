@@ -22,7 +22,9 @@ public class AnalisadorLexico
 
 	private static final String operadoresOuComparadores = "=!()<>+-*/;";
 
-	private static final String padraoFormacaoString = "\"[a-zA-Z0-9_Á«]*\"";
+	// Foram adicionados os caracteres de ESPA«O e TAB no regex para reconhecer
+	// as duas estruturas na string
+	private static final String padraoFormacaoString = "\"[a-zA-Z0-9_Á« 	]*\"";
 
 	private static final String padraoFormacaoInt = "[0]|[1-9][0-9]*";
 
@@ -57,10 +59,11 @@ public class AnalisadorLexico
 		int v_codigoLinhaNova = 10;
 		int v_codigoTab = 9;
 		v_code = leitor.read();
+		leitor.mark(0);
 		v_char = (char) v_code;
 
-		while (v_code != v_codigoEspaco && v_code != v_codigoTab && v_code != v_codigoEnter
-				&& v_code != v_codigoLinhaNova && v_code != -1 && podeContinuarLendo != null && podeContinuarLendo)
+		while ((v_code != v_codigoEspaco && v_code != v_codigoTab && v_code != v_codigoEnter
+				&& v_code != v_codigoLinhaNova && v_code != -1 && podeContinuarLendo != null && podeContinuarLendo))
 		{
 			v_char = (char) v_code;
 
@@ -68,7 +71,17 @@ public class AnalisadorLexico
 			{
 				throw new ErroLexico(Mensagem.caracterInvalido(numeroLinhaArquivo));
 			}
+			if (v_char == '"')
+			{
+				if (!v_lexema.isEmpty())
+				{
 
+					leitor.reset();
+					break;
+				}
+				v_lexema = lerConteudoString(v_char, v_code, v_lexema);
+				break;
+			}
 			podeContinuarLendo = identificarLexema(v_char, v_lexema);
 			if (podeContinuarLendo != null && podeContinuarLendo)
 			{
@@ -215,6 +228,40 @@ public class AnalisadorLexico
 			}
 		}
 		return null;
+	}
+
+	public static String lerConteudoString(char p_char, int p_code, String p_lexema) throws IOException
+	{
+		int v_codigoEnter = 13;
+		int v_codigoLinhaNova = 10;
+		p_lexema = "" + p_char;
+		boolean v_continuar = true;
+
+		while (v_continuar && p_code != -1)
+		{
+			p_code = leitor.read();
+			p_char = (char) p_code;
+
+			if (caracteresInvalidos.indexOf(p_char) != -1)
+			{
+				throw new ErroLexico(Mensagem.caracterInvalido(numeroLinhaArquivo));
+			}
+
+			if (p_char == '"')
+			{
+				v_continuar = false;
+			}
+			else if (p_code == v_codigoEnter || p_code == v_codigoLinhaNova)
+			{
+				throw new ErroLexico(Mensagem.quebraDeLinhaDentroDeString(numeroLinhaArquivo));
+			}
+			else if (p_code == -1)
+			{
+				throw new ErroLexico(Mensagem.fimArquivoNaoEsperado(numeroLinhaArquivo));
+			}
+			p_lexema += p_char;
+		}
+		return p_lexema;
 	}
 
 	/**
