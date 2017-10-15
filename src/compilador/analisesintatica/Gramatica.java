@@ -60,16 +60,60 @@ public class Gramatica
 			COMANDO_ATRIBUICAO();
 		}
 
+		/**
+		 * Identifica o comando de atribuição
+		 * 
+		 * @throws IOException
+		 */
 		public void COMANDO_ATRIBUICAO() throws IOException
 		{
 			casaToken(Token.IDENTIFICADOR);
 			casaToken(Token.IGUAL);
-
+			EXPRESSAO();
+			casaToken(Token.PONTO_VIRGULA);
 		}
 
+		/**
+		 * Identifica expressões
+		 * 
+		 * @throws IOException
+		 */
 		public void EXPRESSAO() throws IOException
 		{
 			EXPRESSAO_SIMPLES();
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.IGUAL_IGUAL)
+					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.DIFERENTE)
+					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.MAIOR)
+					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.MENOR)
+					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.MAIOR_IGUAL)
+					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.MENOR_IGUAL))
+			{
+				if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.IGUAL_IGUAL))
+				{
+					casaToken(Token.IGUAL_IGUAL);
+				}
+				else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.DIFERENTE))
+				{
+					casaToken(Token.DIFERENTE);
+				}
+				else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.MAIOR))
+				{
+					casaToken(Token.MAIOR);
+				}
+				else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.MENOR))
+				{
+					casaToken(Token.MENOR);
+				}
+				else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.MAIOR_IGUAL))
+				{
+					casaToken(Token.MAIOR_IGUAL);
+				}
+				else
+				{
+					casaToken(Token.MENOR_IGUAL);
+				}
+				EXPRESSAO_SIMPLES();
+			}
 		}
 
 		public void EXPRESSAO_SIMPLES() throws IOException
@@ -87,21 +131,21 @@ public class Gramatica
 
 			while (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ADICAO)
 					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.SUBTRACAO)
-					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.AND))
+					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.OR))
 			{
-				if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ASTERISCO))
+				if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ADICAO))
 				{
-					casaToken(Token.ASTERISCO);
+					casaToken(Token.ADICAO);
 				}
-				else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.BARRA_DIREITA))
+				else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.SUBTRACAO))
 				{
-					casaToken(Token.BARRA_DIREITA);
+					casaToken(Token.SUBTRACAO);
 				}
 				else
 				{
-					casaToken(Token.AND);
+					casaToken(Token.OR);
 				}
-				F();
+				T();
 			}
 
 		}

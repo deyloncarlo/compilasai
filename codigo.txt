@@ -1,4 +1,4 @@
-boolean j=FALSE;byte t=0x3F;
-string teste, oila,
-cabelo,
-ok;
+byte variavel_1 = 0x05;
+{
+variavel_1 = 2!=3;
+}
