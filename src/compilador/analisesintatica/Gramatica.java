@@ -51,7 +51,10 @@ public class Gramatica
 		public void PARTE_DECLARACAO_BLOCO() throws IOException
 		{
 			casaToken(Token.ABRE_CHAVES);
-			DECLARA_COMANDOS();
+			while (!AnalisadorLexico.getRegistroLexico().getToken().equals(Token.FECHA_CHAVES))
+			{
+				DECLARA_COMANDOS();
+			}
 			casaToken(Token.FECHA_CHAVES);
 		}
 
@@ -69,8 +72,76 @@ public class Gramatica
 			{
 				COMANDO_TESTE();
 			}
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.PONTO_VIRGULA))
+			{
+				COMANDO_NULO();
+			}
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.READLN))
+			{
+				COMANDO_LEITURA();
+			}
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.WRITE)
+					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.WRITELN))
+			{
+				COMANDO_ESCRITA();
+			}
 		}
 
+		private void COMANDO_ESCRITA() throws IOException
+		{
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.WRITE))
+			{
+				casaToken(Token.WRITE);
+			}
+			else
+			{
+				casaToken(Token.WRITELN);
+			}
+
+			casaToken(Token.VIRGULA);
+
+			COMANDO_ESCRITA_LISTA_EXPRESSAO();
+
+		}
+
+		private void COMANDO_ESCRITA_LISTA_EXPRESSAO() throws IOException
+		{
+			EXPRESSAO();
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.VIRGULA))
+			{
+				casaToken(Token.VIRGULA);
+				COMANDO_ESCRITA_LISTA_EXPRESSAO();
+			}
+		}
+
+		/**
+		 * Identificando o comando de leitura
+		 * 
+		 * @throws IOException
+		 */
+		private void COMANDO_LEITURA() throws IOException
+		{
+			casaToken(Token.READLN);
+			casaToken(Token.VIRGULA);
+			casaToken(Token.IDENTIFICADOR);
+			casaToken(Token.PONTO_VIRGULA);
+		}
+
+		/**
+		 * Identifica um comando nulo (apenas um ponto e vírgula)
+		 * 
+		 * @throws IOException
+		 */
+		private void COMANDO_NULO() throws IOException
+		{
+			casaToken(Token.PONTO_VIRGULA);
+		}
+
+		/**
+		 * Identifica código de IF
+		 * 
+		 * @throws IOException
+		 */
 		private void COMANDO_TESTE() throws IOException
 		{
 			casaToken(Token.IF);
@@ -234,28 +305,24 @@ public class Gramatica
 
 		public void F() throws IOException
 		{
-			switch (AnalisadorLexico.getRegistroLexico().getToken())
+			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.CONSTANTE))
 			{
-				case CONSTANTE:
-					casaToken(Token.CONSTANTE);
-					break;
-
-				case IDENTIFICADOR:
-					casaToken(Token.IDENTIFICADOR);
-					break;
-
-				case NOT:
-					casaToken(Token.NOT);
-					F();
-					break;
-
-				case ABRE_PARENTESES:
-					casaToken(Token.ABRE_PARENTESES);
-					EXPRESSAO();
-					casaToken(Token.FECHA_PARENTESES);
-					break;
-				default:
-					break;
+				casaToken(Token.CONSTANTE);
+			}
+			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.IDENTIFICADOR))
+			{
+				casaToken(Token.IDENTIFICADOR);
+			}
+			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.NOT))
+			{
+				casaToken(Token.NOT);
+				F();
+			}
+			else
+			{
+				casaToken(Token.ABRE_PARENTESES);
+				EXPRESSAO();
+				casaToken(Token.FECHA_PARENTESES);
 			}
 		}
 
