@@ -3,83 +3,86 @@ package compilador.analiselexica;
 
 public enum Token
 {
-	FINAL("final"),
+	FINAL("final", 1),
 
-	INT("int"),
+	INT("int", 2),
 
-	BYTE("byte"),
+	BYTE("byte", 3),
 
-	BOOLEAN("boolean"),
+	BOOLEAN("boolean", 4),
 
-	STRING("string"),
+	STRING("string", 5),
 
-	WHILE("while"),
+	WHILE("while", 6),
 
-	IF("if"),
+	IF("if", 7),
 
-	ELSE("else"),
+	ELSE("else", 8),
 
-	AND("and"),
+	AND("and", 9),
 
-	OR("or"),
+	OR("or", 10),
 
-	NOT("not"),
+	NOT("not", 11),
 
-	IGUAL("="),
+	IGUAL("=", 12),
 
-	IGUAL_IGUAL("=="),
+	IGUAL_IGUAL("==", 13),
 
-	ABRE_PARENTESES("("),
+	ABRE_PARENTESES("(", 14),
 
-	FECHA_PARENTESES(")"),
+	FECHA_PARENTESES(")", 15),
 
-	MAIOR(">"),
+	MAIOR(">", 16),
 
-	MENOR("<"),
+	MENOR("<", 17),
 
-	DIFERENTE("!="),
+	DIFERENTE("!=", 18),
 
-	MAIOR_IGUAL(">="),
+	MAIOR_IGUAL(">=", 19),
 
-	MENOR_IGUAL("<="),
+	MENOR_IGUAL("<=", 20),
 
-	VIRGULA(","),
+	VIRGULA(",", 21),
 
-	ADICAO("+"),
+	ADICAO("+", 22),
 
-	SUBTRACAO("-"),
+	SUBTRACAO("-", 23),
 
-	ASTERISCO("*"),
+	ASTERISCO("*", 24),
 
-	BARRA_DIREITA("/"),
+	BARRA_DIREITA("/", 25),
 
-	BARRA_ESQUERDA("\\"),
+	BARRA_ESQUERDA("\\", 26),
 
-	PONTO_VIRGULA(";"),
+	PONTO_VIRGULA(";", 27),
 
-	READLN("readln"),
+	READLN("readln", 28),
 
-	WRITE("write"),
+	WRITE("write", 29),
 
-	WRITELN("writeln"),
+	WRITELN("writeln", 30),
 
-	TRUE("true"),
+	TRUE("true", 31),
 
-	FALSE("false"),
+	FALSE("false", 32),
 
-	IDENTIFICADOR(""),
+	IDENTIFICADOR("", 33),
 
-	CONSTANTE(""),
+	CONSTANTE("", 34),
 
-	ABRE_CHAVES("{"),
+	ABRE_CHAVES("{", 35),
 
-	FECHA_CHAVES("}");
+	FECHA_CHAVES("}", 36);
 
 	private String lexema;
 
-	Token(String p_lexema)
+	private Byte valorByte;
+
+	Token(String p_lexema, int p_valorByte)
 	{
 		setLexema(p_lexema);
+		setValorByte((byte) p_valorByte);
 	}
 
 	public String getLexema()
@@ -90,5 +93,15 @@ public enum Token
 	public void setLexema(String p_lexema)
 	{
 		this.lexema = p_lexema;
+	}
+
+	public Byte getValorByte()
+	{
+		return this.valorByte;
+	}
+
+	public void setValorByte(Byte valorByte)
+	{
+		this.valorByte = valorByte;
 	}
 }

@@ -3,6 +3,8 @@ package compilador.analisesintatica;
 import java.io.IOException;
 
 import compilador.analiselexica.AnalisadorLexico;
+import compilador.analiselexica.ErroLexico;
+import compilador.analiselexica.Mensagem;
 import compilador.analiselexica.Token;
 
 public class Gramatica
@@ -19,6 +21,11 @@ public class Gramatica
 		AnalisadorSintatico.casaToken(p_token);
 	}
 
+	/**
+	 * Método que faz a chama do método para iniciar a análise do código fonte
+	 * 
+	 * @throws IOException
+	 */
 	public void executarGramatica() throws IOException
 	{
 		DeclaracaoVariaveis v_declaraVariveis = new DeclaracaoVariaveis();
@@ -58,35 +65,50 @@ public class Gramatica
 			casaToken(Token.FECHA_CHAVES);
 		}
 
+		/**
+		 * Método que identifica os comandos
+		 * 
+		 * @throws IOException
+		 */
 		public void DECLARA_COMANDOS() throws IOException
 		{
 			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.IDENTIFICADOR))
 			{
 				COMANDO_ATRIBUICAO();
 			}
-			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.WHILE))
+			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.WHILE))
 			{
 				COMANDO_REPETICAO();
 			}
-			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.IF))
+			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.IF))
 			{
 				COMANDO_TESTE();
 			}
-			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.PONTO_VIRGULA))
+			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.PONTO_VIRGULA))
 			{
 				COMANDO_NULO();
 			}
-			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.READLN))
+			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.READLN))
 			{
 				COMANDO_LEITURA();
 			}
-			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.WRITE)
+			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.WRITE)
 					|| AnalisadorLexico.getRegistroLexico().getToken().equals(Token.WRITELN))
 			{
 				COMANDO_ESCRITA();
 			}
+			else
+			{
+				throw new ErroLexico(Mensagem.tokenNaoEsperado(AnalisadorLexico.getRegistroLexico().getLexema(),
+						AnalisadorLexico.getNumeroLinhaArquivo()));
+			}
 		}
 
+		/**
+		 * Método que identifica comando de escrita
+		 * 
+		 * @throws IOException
+		 */
 		private void COMANDO_ESCRITA() throws IOException
 		{
 			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.WRITE))
@@ -104,6 +126,11 @@ public class Gramatica
 
 		}
 
+		/**
+		 * Método que identifica comando de escrita para mais de um expressão
+		 * 
+		 * @throws IOException
+		 */
 		private void COMANDO_ESCRITA_LISTA_EXPRESSAO() throws IOException
 		{
 			EXPRESSAO();
@@ -157,13 +184,22 @@ public class Gramatica
 
 		}
 
+		/**
+		 * Método que identifica o conteúdo que vem dentro de um comando de
+		 * teste (IF)
+		 * 
+		 * @throws IOException
+		 */
 		private void CORPO_TESTE() throws IOException
 		{
 			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ABRE_CHAVES))
 			{
 				PARTE_DECLARACAO_BLOCO();
 			}
-			DECLARA_COMANDOS();
+			else
+			{
+				DECLARA_COMANDOS();
+			}
 		}
 
 		/**
@@ -181,13 +217,22 @@ public class Gramatica
 
 		}
 
+		/**
+		 * Método que identifica o conteúdo que vem dentro de um comando de
+		 * repetição (While)
+		 * 
+		 * @throws IOException
+		 */
 		private void COMANDO_REPETICAO_CORPO() throws IOException
 		{
 			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ABRE_CHAVES))
 			{
 				PARTE_DECLARACAO_BLOCO();
 			}
-			DECLARA_COMANDOS();
+			else
+			{
+				DECLARA_COMANDOS();
+			}
 		}
 
 		/**
@@ -246,6 +291,11 @@ public class Gramatica
 			}
 		}
 
+		/**
+		 * Método que identifica expressões simples
+		 * 
+		 * @throws IOException
+		 */
 		public void EXPRESSAO_SIMPLES() throws IOException
 		{
 			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ADICAO))
@@ -280,6 +330,11 @@ public class Gramatica
 
 		}
 
+		/**
+		 * Método que incorpora a leitura de expressões
+		 * 
+		 * @throws IOException
+		 */
 		public void T() throws IOException
 		{
 			F();
@@ -303,6 +358,11 @@ public class Gramatica
 			}
 		}
 
+		/**
+		 * Método que incorpora a leitura de expressões
+		 * 
+		 * @throws IOException
+		 */
 		public void F() throws IOException
 		{
 			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.CONSTANTE))

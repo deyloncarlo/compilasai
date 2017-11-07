@@ -8,15 +8,13 @@ final f = 3;
 	write, "pessoa";
 	writeln, d, e, f;
 
-	k = 7;
-
-	read, a;
-	read, b;
+	readln, a;
+	readln, b;
 
 	if (a >= f) a = f*5;
 
-	if (a == 0) 
-		e = 12;
+	if (a == 0 )
+
 	else {
 		e = 13;
 	}
@@ -28,3 +26,4 @@ final f = 3;
 			e = e + 1;
 	}
 }
+/*não tem erro.*/

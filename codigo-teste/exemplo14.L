@@ -8,15 +8,12 @@ final f = 3;
 	write, "pessoa";
 	writeln, d, e, f;
 
-	read, a;
-	read, b;
-	
-	a = "gabriel"+5;
-
+	readln, a, d;/*lê duas variáveis ao mesmo tempo.*/
+	readln, b;
 
 	if (a >= f) a = f*5;
 
-	if (a == 0) 
+	if (a == 0 )
 		e = 12;
 	else {
 		e = 13;
@@ -29,3 +26,4 @@ final f = 3;
 			e = e + 1;
 	}
 }
+

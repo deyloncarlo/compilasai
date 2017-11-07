@@ -1,4 +1,4 @@
-	int a;
+int a;
 boolean b, c;
 string d = "casa";
 byte e;
@@ -8,7 +8,7 @@ final f = 3;
 	write, "pessoa";
 	writeln, d, e, f;
 
-	readln, a;
+	readln, a, d;/*lê duas variáveis ao mesmo tempo.*/
 	readln, b;
 
 	if (a >= f) a = f*5;
@@ -26,3 +26,4 @@ final f = 3;
 			e = e + 1;
 	}
 }
+

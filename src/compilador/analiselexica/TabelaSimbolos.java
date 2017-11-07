@@ -6,6 +6,13 @@ public class TabelaSimbolos
 
 	public static RegistroTabelaSimbolo raiz;
 
+	/**
+	 * Método que insere um novo registro na tabela de símbolo
+	 * 
+	 * @param p_token
+	 * @param p_lexema
+	 * @return
+	 */
 	public static RegistroTabelaSimbolo insereNovoRegistro(Token p_token, String p_lexema)
 	{
 		RegistroTabelaSimbolo v_novoRegistro = new RegistroTabelaSimbolo(p_token, p_lexema);
@@ -42,6 +49,12 @@ public class TabelaSimbolos
 		return raiz;
 	}
 
+	/**
+	 * Método que obtém um registor da tabela de símbolo pelo seu lexema
+	 * 
+	 * @param p_lexema
+	 * @return
+	 */
 	public static RegistroTabelaSimbolo pesquisarRegistro(String p_lexema)
 	{
 		Boolean v_encontrou = false;
@@ -77,6 +90,9 @@ public class TabelaSimbolos
 
 	}
 
+	/**
+	 * Método que exibe os registros existentes
+	 */
 	public static void exibeRegistros()
 	{
 		if (raiz == null)
@@ -98,6 +114,14 @@ public class TabelaSimbolos
 
 	}
 
+	/**
+	 * Método que veifica se um registro da tabela de símbolos possui um
+	 * determinado lexema
+	 * 
+	 * @param p_lexema
+	 * @param p_registro
+	 * @return
+	 */
 	public static Boolean verificaSeRegistoPossuiLexema(String p_lexema, RegistroTabelaSimbolo p_registro)
 	{
 		if (p_registro == null)

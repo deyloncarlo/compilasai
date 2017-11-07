@@ -10,7 +10,7 @@ public class AnalisadorLexico
 	private static RegistroLexico registroLexico = new RegistroLexico();
 
 	/** caminho do arquivo de código fonte */
-	private static String nomeArquivo = "codigo.txt";
+	private static String nomeArquivo = "codigo-teste/exemplo9.L";
 
 	/** Leitor responsável por ler o arquivo fonte */
 	private static BufferedReader leitor;
@@ -109,7 +109,7 @@ public class AnalisadorLexico
 
 		if (!v_lexema.isEmpty())
 		{
-			System.out.println(v_lexema);
+			// System.out.println(v_lexema);
 			identificarLexema(v_lexema);
 		}
 		else
@@ -164,6 +164,15 @@ public class AnalisadorLexico
 		}
 	}
 
+	/**
+	 * Método que identifica quando o lexema termina ou quando deve "devolver"
+	 * último carcter lido
+	 * 
+	 * @param p_char
+	 * @param p_lexema
+	 * @return
+	 * @throws IOException
+	 */
 	public static Boolean identificarLexema(char p_char, String p_lexema) throws IOException
 	{
 		if (p_lexema.equals("/") && p_char == '*')
@@ -230,6 +239,15 @@ public class AnalisadorLexico
 		return null;
 	}
 
+	/**
+	 * Método que identifica todo o conteúdo que contém dentro de uma String
+	 * 
+	 * @param p_char
+	 * @param p_code
+	 * @param p_lexema
+	 * @return
+	 * @throws IOException
+	 */
 	public static String lerConteudoString(char p_char, int p_code, String p_lexema) throws IOException
 	{
 		int v_codigoEnter = 13;
@@ -253,7 +271,7 @@ public class AnalisadorLexico
 			}
 			else if (p_code == v_codigoEnter || p_code == v_codigoLinhaNova)
 			{
-				throw new ErroLexico(Mensagem.quebraDeLinhaDentroDeString(numeroLinhaArquivo));
+				throw new ErroLexico(Mensagem.lexemaNaoIdentificado(numeroLinhaArquivo, p_lexema));
 			}
 			else if (p_code == -1)
 			{
@@ -301,6 +319,11 @@ public class AnalisadorLexico
 		return false;
 	}
 
+	/**
+	 * Método que está inicializando o registro Léxico (Método só de teste)
+	 * 
+	 * @throws IOException
+	 */
 	public static void lerArquivo() throws IOException
 	{
 		registroLexico = new RegistroLexico();
@@ -318,15 +341,21 @@ public class AnalisadorLexico
 		registroLexico = new RegistroLexico();
 	}
 
-	public static void abrirArquivo()
+	/**
+	 * Método responsável por abrir o código fonte
+	 * 
+	 * @param p_nomeArquivo
+	 */
+	public static void abrirArquivo(String p_nomeArquivo)
 	{
 		try
 		{
-			leitor = new BufferedReader(new FileReader(nomeArquivo));
+			leitor = new BufferedReader(new FileReader(p_nomeArquivo));
 		}
 		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
+			throw new Error("Falha ao abrir o código fonte.");
 		}
 	}
 

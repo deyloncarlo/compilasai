@@ -14,11 +14,25 @@ public class TesteCompilasai
 	 * Deylon Carlo Fidelis Couto, Laura Ester
 	 * 
 	 */
-	public static void main(String[] args)
+	public static void main(String[] p_args)
 	{
 		try
 		{
-			startCompilaSai();
+			if (p_args.length > 0)
+			{
+				if (p_args[0] != null)
+				{
+					startCompilaSai(p_args[0]);
+				}
+				else
+				{
+					throw new Error("Código fonte não identificado.");
+				}
+			}
+			else
+			{
+				throw new Error("Código fonte não identificado.");
+			}
 		}
 		catch (IOException e)
 		{
@@ -40,20 +54,20 @@ public class TesteCompilasai
 			}
 		}
 
-		TabelaSimbolos.exibeRegistros();
+		// TabelaSimbolos.exibeRegistros();
 	}
 
-	public static void lendoArquivoCodigoFonte() throws IOException
+	public static void lendoArquivoCodigoFonte(String p_nomeArquivo) throws IOException
 	{
 		insercaoPalavrasReservadas();
-		AnalisadorLexico.abrirArquivo();
+		AnalisadorLexico.abrirArquivo(p_nomeArquivo);
 		AnalisadorLexico.lerArquivo();
 	}
 
-	public static void startCompilaSai() throws IOException
+	public static void startCompilaSai(String p_nomeArquivo) throws IOException
 	{
 		insercaoPalavrasReservadas();
-		AnalisadorLexico.abrirArquivo();
+		AnalisadorLexico.abrirArquivo(p_nomeArquivo);
 		AnalisadorLexico.iniciarRegistroLexico();
 		AnalisadorLexico.lerProximoLexema();
 		AnalisadorSintatico.executarGramatica();

@@ -13,7 +13,7 @@ final f = 3;
 
 	if (a >= f) a = f*5;
 
-	if (a == 0) 
+	if (a = 0 )/*não tem erro léxico nem sintático.*/
 		e = 12;
 	else {
 		e = 13;
@@ -25,4 +25,4 @@ final f = 3;
 		if ((e / 2) > ((e/2)*2))
 			e = e + 1;
 	}
-
+}

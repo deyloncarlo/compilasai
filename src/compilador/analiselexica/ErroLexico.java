@@ -6,6 +6,11 @@ public class ErroLexico extends RuntimeException
 
 	private String mensagemErro;
 
+	/**
+	 * Método responsável por lançar a mensagem de erro
+	 * 
+	 * @param p_mensagem
+	 */
 	public ErroLexico(String p_mensagem)
 	{
 		this.mensagemErro = p_mensagem;
