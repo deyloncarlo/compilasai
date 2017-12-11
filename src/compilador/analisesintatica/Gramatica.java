@@ -3,8 +3,12 @@ package compilador.analisesintatica;
 import java.io.IOException;
 
 import compilador.analiselexica.AnalisadorLexico;
+import compilador.analiselexica.Classe;
 import compilador.analiselexica.ErroLexico;
 import compilador.analiselexica.Mensagem;
+import compilador.analiselexica.RegistroTabelaSimbolo;
+import compilador.analiselexica.TabelaSimbolos;
+import compilador.analiselexica.Tipo;
 import compilador.analiselexica.Token;
 
 public class Gramatica
@@ -150,6 +154,9 @@ public class Gramatica
 		{
 			casaToken(Token.READLN);
 			casaToken(Token.VIRGULA);
+
+			verificarIdentificadorNaoFoiDeclarado();
+
 			casaToken(Token.IDENTIFICADOR);
 			casaToken(Token.PONTO_VIRGULA);
 		}
@@ -242,6 +249,10 @@ public class Gramatica
 		 */
 		public void COMANDO_ATRIBUICAO() throws IOException
 		{
+
+			verificarIdentificadorNaoFoiDeclarado();
+			verificarClasseIdentificador();
+
 			casaToken(Token.IDENTIFICADOR);
 			casaToken(Token.IGUAL);
 			EXPRESSAO();
@@ -371,6 +382,9 @@ public class Gramatica
 			}
 			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.IDENTIFICADOR))
 			{
+
+				verificarIdentificadorNaoFoiDeclarado();
+
 				casaToken(Token.IDENTIFICADOR);
 			}
 			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.NOT))
@@ -419,16 +433,33 @@ public class Gramatica
 		private void DECLARACAO_FINAL() throws IOException
 		{
 			casaToken(Token.FINAL);
+
+			verificarIdentificadorJaDeclarado();
+
+			// Definindo a classe do identificador
+			RegistroTabelaSimbolo v_registroTabelaSimbolo = obterRegistroTabelaSimbolo();
+			definirClasseIdentificador(v_registroTabelaSimbolo, Classe.CONST);
+
 			casaToken(Token.IDENTIFICADOR);
 			casaToken(Token.IGUAL);
 
+			boolean v_temSinal = false;
 			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ADICAO))
 			{
+				v_temSinal = true;
 				casaToken(Token.ADICAO);
 			}
 			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.SUBTRACAO))
 			{
+				v_temSinal = true;
 				casaToken(Token.SUBTRACAO);
+			}
+			Tipo v_tipoConstante = AnalisadorLexico.getRegistroLexico().getTipo();
+			v_tipoConstante = transformarTipoByteEmInt(v_temSinal, v_tipoConstante);
+			if (v_tipoConstante != null)
+			{
+				v_registroTabelaSimbolo.setTipo(v_tipoConstante);
+				AnalisadorLexico.getRegistroLexico().setTipo(v_tipoConstante);
 			}
 			casaToken(Token.CONSTANTE);
 			casaToken(Token.PONTO_VIRGULA);
@@ -441,35 +472,56 @@ public class Gramatica
 		 */
 		public void DECLARACAO_VARIAVEIS() throws IOException
 		{
-			TIPO();
+			Tipo p_tipo = TIPO();
+
+			// verificando se identificador já foi declarado
+			verificarIdentificadorJaDeclarado();
+
+			// Definindo a classe do identificador
+			RegistroTabelaSimbolo v_registroTabelaSimbolo = obterRegistroTabelaSimbolo();
+			v_registroTabelaSimbolo.setTipo(p_tipo);
+			AnalisadorLexico.getRegistroLexico().setTipo(p_tipo);
+			definirClasseIdentificador(v_registroTabelaSimbolo, Classe.VAR);
+
 			casaToken(Token.IDENTIFICADOR);
-			FORMA_DECLARACAO();
+			FORMA_DECLARACAO(p_tipo);
 			casaToken(Token.PONTO_VIRGULA);
 		}
 
 		/**
 		 * Identifica como será feita a declaracao de veriável
 		 * 
+		 * @param p_tipo
+		 * 
 		 * @throws IOException
 		 */
-		private void FORMA_DECLARACAO() throws IOException
+		private void FORMA_DECLARACAO(Tipo p_tipo) throws IOException
 		{
 			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.VIRGULA))
 			{
-				LISTA_ID_DECLARACAO();
+				LISTA_ID_DECLARACAO(p_tipo);
 			}
 			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.IGUAL))
 			{
 				casaToken(Token.IGUAL);
+				boolean v_temSinal = false;
 				if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.ADICAO))
 				{
+					v_temSinal = true;
 					casaToken(Token.ADICAO);
 				}
 				else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.SUBTRACAO))
 				{
+					v_temSinal = true;
 					casaToken(Token.SUBTRACAO);
 				}
 
+				Tipo v_tipoConstante = AnalisadorLexico.getRegistroLexico().getTipo();
+				v_tipoConstante = transformarTipoByteEmInt(v_temSinal, v_tipoConstante);
+				if (!p_tipo.equals(v_tipoConstante))
+				{
+					throw new Error("Tipo errado aí");
+				}
 				casaToken(Token.CONSTANTE);
 			}
 		}
@@ -477,42 +529,147 @@ public class Gramatica
 		/**
 		 * Identifica declaração de lista de variáveis
 		 * 
+		 * @param p_tipo
+		 * 
 		 * @throws IOException
 		 */
-		private void LISTA_ID_DECLARACAO() throws IOException
+		private void LISTA_ID_DECLARACAO(Tipo p_tipo) throws IOException
 		{
 			casaToken(Token.VIRGULA);
+
+			// verificando se identificador já foi declarado
+			verificarIdentificadorJaDeclarado();
+
+			// Definindo a classe do identificador
+			RegistroTabelaSimbolo v_registroTabelaSimbolo = obterRegistroTabelaSimbolo();
+			v_registroTabelaSimbolo.setTipo(p_tipo);
+			AnalisadorLexico.getRegistroLexico().setTipo(p_tipo);
+			definirClasseIdentificador(v_registroTabelaSimbolo, Classe.VAR);
+
 			casaToken(Token.IDENTIFICADOR);
 			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.VIRGULA))
 			{
-				LISTA_ID_DECLARACAO();
+				LISTA_ID_DECLARACAO(p_tipo);
 			}
 		}
 
 		/**
 		 * Identifica qual o tipo da variavel durante a declaracao
 		 * 
+		 * @return
+		 * 
 		 * @throws IOException
 		 */
-		private void TIPO() throws IOException
+		private Tipo TIPO() throws IOException
 		{
+			Tipo p_tipo = null;
 			if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.INT))
 			{
 				casaToken(Token.INT);
+				p_tipo = Tipo.INT;
 			}
 			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.STRING))
 			{
 				casaToken(Token.STRING);
+				p_tipo = Tipo.STRING;
 			}
 			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.BOOLEAN))
 			{
 				casaToken(Token.BOOLEAN);
+				p_tipo = Tipo.BOOLEAN;
 			}
 			else if (AnalisadorLexico.getRegistroLexico().getToken().equals(Token.BYTE))
 			{
 				casaToken(Token.BYTE);
+				p_tipo = Tipo.BYTE;
 			}
+			return p_tipo;
 		}
+	}
+
+	/**
+	 * Função que define a classe de um determinado identificador
+	 * 
+	 * @param Classe que será atribuída a um determinado identificador
+	 */
+	public void definirClasseIdentificador(RegistroTabelaSimbolo p_registro, Classe p_classe)
+	{
+		AnalisadorLexico.getRegistroLexico().setClasse(p_classe);
+		p_registro.setClasse(p_classe);
+
+	}
+
+	/**
+	 * Método que verifica se um indentificador de classe CONST está recebendo
+	 * algum outro valor.
+	 */
+	public void verificarClasseIdentificador()
+	{
+		boolean v_classeConstante = obterRegistroTabelaSimbolo().getClasse() == Classe.CONST;
+
+		if (v_classeConstante)
+		{
+			throw new ErroLexico(Mensagem.classeIdentificadorIncompativel(AnalisadorLexico.getNumeroLinhaArquivo(),
+					AnalisadorLexico.getRegistroLexico().getLexema()));
+		}
+
+	}
+
+	/**
+	 * Método que verifica se o identificador já foi declarado
+	 */
+	public void verificarIdentificadorNaoFoiDeclarado()
+	{
+		boolean v_naoFoiDeclarado = obterRegistroTabelaSimbolo().getTipo() == null;
+		if (v_naoFoiDeclarado)
+		{
+			throw new ErroLexico(Mensagem.identificadorNaoDeclarado(AnalisadorLexico.getNumeroLinhaArquivo(),
+					AnalisadorLexico.getRegistroLexico().getLexema()));
+		}
+	}
+
+	/**
+	 * Método que verifica se identificador já foi declarado
+	 */
+	public void verificarIdentificadorJaDeclarado()
+	{
+		boolean v_foiDeclarado = obterRegistroTabelaSimbolo().getTipo() != null;
+		if (v_foiDeclarado)
+		{
+			throw new ErroLexico(Mensagem.identificadorJaDeclarado(AnalisadorLexico.getNumeroLinhaArquivo(),
+					AnalisadorLexico.getRegistroLexico().getLexema()));
+		}
+
+	}
+
+	/**
+	 * Método que transforma Tipo BYTE em INT.
+	 * 
+	 * @param p_podeTransformar
+	 * 
+	 * @param v_tipoConstante
+	 * @return
+	 */
+	public Tipo transformarTipoByteEmInt(boolean p_podeTransformar, Tipo v_tipoConstante)
+	{
+		if (v_tipoConstante != null && v_tipoConstante.equals(Tipo.BYTE) && p_podeTransformar)
+		{
+			return Tipo.INT;
+		}
+		return v_tipoConstante;
+
+	}
+
+	/**
+	 * Método que obtém o registro da tabela de símbolo correspondente ao
+	 * registro léxico atual
+	 * 
+	 * @return Registro da tabela de símbolo correspondente ao registro léxico
+	 * atual
+	 */
+	public RegistroTabelaSimbolo obterRegistroTabelaSimbolo()
+	{
+		return TabelaSimbolos.pesquisarRegistro(AnalisadorLexico.getRegistroLexico().getLexema());
 	}
 
 }

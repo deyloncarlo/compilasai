@@ -12,6 +12,7 @@ public class RegistroLexico
 	private String lexema;
 	private RegistroTabelaSimbolo registroTabelaSimbolo;
 	private Tipo tipo;
+	private Classe classe;
 
 	public RegistroLexico()
 	{
@@ -63,5 +64,15 @@ public class RegistroLexico
 	public void setTipo(Tipo tipo)
 	{
 		this.tipo = tipo;
+	}
+
+	public Classe getClasse()
+	{
+		return this.classe;
+	}
+
+	public void setClasse(Classe p_classe)
+	{
+		this.classe = p_classe;
 	}
 }

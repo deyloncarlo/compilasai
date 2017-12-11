@@ -15,7 +15,7 @@ public class Main
 			{
 				if (p_args[0] != null)
 				{
-					startCompilaSai(p_args[0]);
+					startCompilaSai("bla.L");
 				}
 				else
 				{
@@ -24,7 +24,8 @@ public class Main
 			}
 			else
 			{
-				throw new Error("Código fonte não identificado.");
+				// throw new Error("Código fonte não identificado.");
+				startCompilaSai("bla.L");
 			}
 		}
 		catch (IOException e)

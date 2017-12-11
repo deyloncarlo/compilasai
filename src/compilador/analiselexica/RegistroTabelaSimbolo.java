@@ -10,6 +10,10 @@ public class RegistroTabelaSimbolo
 
 	private RegistroTabelaSimbolo proximo;
 
+	private Tipo tipo;
+
+	private Classe classe;
+
 	public RegistroTabelaSimbolo(Token p_token, String p_lexama)
 	{
 		setToken(p_token);
@@ -44,6 +48,26 @@ public class RegistroTabelaSimbolo
 	public void setProximo(RegistroTabelaSimbolo proximo)
 	{
 		this.proximo = proximo;
+	}
+
+	public Tipo getTipo()
+	{
+		return this.tipo;
+	}
+
+	public void setTipo(Tipo tipo)
+	{
+		this.tipo = tipo;
+	}
+
+	public Classe getClasse()
+	{
+		return this.classe;
+	}
+
+	public void setClasse(Classe classe)
+	{
+		this.classe = classe;
 	}
 
 }

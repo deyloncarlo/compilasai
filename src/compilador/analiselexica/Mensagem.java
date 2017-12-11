@@ -26,4 +26,19 @@ public class Mensagem
 	{
 		return p_numeroLinhaArquivo + ": " + "quebra de linha dentro de string";
 	}
+
+	public static String identificadorJaDeclarado(int p_numeroLinhaArquivo, String p_lexema)
+	{
+		return p_numeroLinhaArquivo + ": " + "identificador já declarado " + "[" + p_lexema + "]";
+	}
+
+	public static String identificadorNaoDeclarado(int p_numeroLinhaArquivo, String p_lexema)
+	{
+		return p_numeroLinhaArquivo + ": " + "identificador não declarado " + "[" + p_lexema + "]";
+	}
+
+	public static String classeIdentificadorIncompativel(int p_numeroLinhaArquivo, String p_lexema)
+	{
+		return p_numeroLinhaArquivo + ": " + "classe de identificador incompatível " + "[" + p_lexema + "]";
+	}
 }
